@@ -87,13 +87,20 @@ namespace RomeroFuzzyLogic
         public void InitializeCharts()
         {
 
-            // Sets properties for temperature chart
-            Chart.Series[0].Name = "Chart";
+            // Sets properties for throttle
+            Chart.Series[0].Name = "Throttle Chart";
             Chart.Series[0].Color = Color.Red;
             Chart.Series[0].ChartType = SeriesChartType.Line;
             Chart.Series[0].Points.AddY(0);
             Chart.ChartAreas[0].AxisY.Minimum = 0;
             Chart.ChartAreas[0].AxisY.Maximum = 60;
+
+            Chart1.Series[0].Name = "Speed Chart";
+            Chart1.Series[0].Color = Color.Red;
+            Chart1.Series[0].ChartType = SeriesChartType.Line;
+            Chart1.Series[0].Points.AddY(0);
+            Chart1.ChartAreas[0].AxisY.Minimum = 0;
+            Chart1.ChartAreas[0].AxisY.Maximum = 100;
         }
         private void fileToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -171,10 +178,25 @@ namespace RomeroFuzzyLogic
 
         }
 
+        private void updateChart1()
+        {
+            double speed = Convert.ToDouble(textBox1.Text);
+            // Updates chart for speed
+            Chart1.Invoke((MethodInvoker)(() =>
+            {
+                if (Chart.Series[0].Points.Count > 25) Chart1.Series[0].Points.RemoveAt(0);
+
+                Chart1.Series[0].Points.AddY(speed);
+                Chart1.ChartAreas[0].AxisX.Minimum = Chart1.Series[0].Points[0].XValue;
+                Chart1.ChartAreas[0].AxisX.Maximum = 25;
+            }));
+        }
+
+
         public void updateChart()
         {
             double throttle = Convert.ToDouble(textBox3.Text);
-            // Updates chart for temperature
+            // Updates chart for throttle
             Chart.Invoke((MethodInvoker)(() =>
             {
                 if (Chart.Series[0].Points.Count > 25) Chart.Series[0].Points.RemoveAt(0);
@@ -213,6 +235,7 @@ namespace RomeroFuzzyLogic
             defuzzy();
             computenewspeed();
             updateChart();
+            updateChart1();
         }
     }
 }
